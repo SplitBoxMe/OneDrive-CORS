@@ -33,10 +33,12 @@ function handler(req, res) {
 		res.setHeader('Access-Control-Allow-Credentials', false);
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 		res.setHeader('Expires', new Date(Date.now() + 86400000).toUTCString()); // one day in the future
-		var r = request(uuu, {encoding: null, rejectUnauthorized: false, headers: {
+		var r = request(uuu, {followRedirect: false, encoding: null, rejectUnauthorized: false, headers: {
 'Authorization': 'bearer ' + auth 
-}});
-		r.pipe(res);
+}}, function(error, response, body) {
+	console.log(response.headers)
+	res.end(response.headers.location)
+});
 	} catch (e) {
 		res.end('Error: ' +  ((e instanceof TypeError) ? "make sure your URL is correct" : String(e)));
 	}
